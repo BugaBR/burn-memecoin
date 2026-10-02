@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$BURN 🔥 | A Memecoin Mais Quente da Pump.fun (Solana)</title>
+  <meta name="description" content="Tudo queima. Menos a nossa lua! Conheça a $BURN, a memecoin hiper-deflacionária na rede Solana via Pump.fun. Zero taxas, 100% Fair Launch." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/burn_mascot.jpg" />
+  
+  <!-- Google Fonts: Space Grotesk & Clash Display style font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            fire: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            },
+            magma: '#FF3B00',
+            ember: '#FFAA00',
+            darkbg: '#080608',
+            cardbg: '#140c0a',
+            glass: 'rgba(28, 16, 12, 0.75)'
+          },
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 4s ease-in-out infinite',
+            'flame-glow': 'flameGlow 2.5s ease-in-out infinite alternate',
+            'marquee': 'marquee 25s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            flameGlow: {
+              '0%': { filter: 'drop-shadow(0 0 20px rgba(255, 69, 0, 0.5))' },
+              '100%': { filter: 'drop-shadow(0 0 45px rgba(255, 170, 0, 0.85))' },
+            },
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-darkbg text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-magma selection:text-white">
+
+  <!-- Background Particle Canvas (Rising Fire Embers) -->
+  <canvas id="emberCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- Ambient Light Gradients -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-magma/20 rounded-full blur-[140px] pointer-events-none z-0"></div>
+  <div class="fixed bottom-0 right-0 w-[500px] h-[500px] bg-ember/15 rounded-full blur-[160px] pointer-events-none z-0"></div>
+
+  <!-- Top Marquee Banner -->
+  <div class="relative z-50 bg-gradient-to-r from-magma via-ember to-magma py-2 text-black font-extrabold text-xs md:text-sm uppercase tracking-wider overflow-hidden shadow-lg shadow-magma/20">
+    <div class="flex whitespace-nowrap animate-marquee">
+      <div class="flex items-center space-x-6 px-4">
+        <span>🔥 LANÇAMENTO EXCLUSIVO NA PUMP.FUN</span>
+        <span>•</span>
+        <span>💥 100% FAIR LAUNCH</span>
+        <span>•</span>
+        <span>🚫 ZERO TAXAS (0% TAX)</span>
+        <span>•</span>
+        <span>⚡ REDE SOLANA ULTRA RÁPIDA</span>
+        <span>•</span>
+        <span>💎 DIAMOND HANDS ONLY</span>
+        <span>•</span>
+        <span>🔥 QUEIMANDO O SUPPLY & DERRETENDO OS BEARS</span>
+        <span>•</span>
+      </div>
+      <div class="flex items-center space-x-6 px-4">
+        <span>🔥 LANÇAMENTO EXCLUSIVO NA PUMP.FUN</span>
+        <span>•</span>
+        <span>💥 100% FAIR LAUNCH</span>
+        <span>•</span>
+        <span>🚫 ZERO TAXAS (0% TAX)</span>
+        <span>•</span>
+        <span>⚡ REDE SOLANA ULTRA RÁPIDA</span>
+        <span>•</span>
+        <span>💎 DIAMOND HANDS ONLY</span>
+        <span>•</span>
+        <span>🔥 QUEIMANDO O SUPPLY & DERRETENDO OS BEARS</span>
+        <span>•</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-darkbg/80 border-b border-fire-900/40 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="relative w-12 h-12 rounded-2xl overflow-hidden border border-fire-500/60 shadow-lg shadow-magma/40 group-hover:scale-105 transition-transform duration-300">
+          <img src="assets/burn_mascot.jpg" alt="BURN Mascot" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <span class="font-display font-black text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-red-500 group-hover:text-amber-300 transition-colors">
+            $BURN
+          </span>
+          <span class="block text-[10px] text-fire-400 font-bold tracking-widest uppercase">Pump.fun Edition</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-300">
+        <a href="#sobre" class="hover:text-amber-400 transition-colors">Sobre</a>
+        <a href="#bonding-curve" class="hover:text-amber-400 transition-colors flex items-center gap-1.5">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-magma opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-ember"></span>
+          </span>
+          Bonding Curve
+        </a>
+        <a href="#tokenomics" class="hover:text-amber-400 transition-colors">Tokenomics</a>
+        <a href="#como-comprar" class="hover:text-amber-400 transition-colors">Como Comprar</a>
+        <a href="#burnmap" class="hover:text-amber-400 transition-colors">Burnmap</a>
+        <a href="#faq" class="hover:text-amber-400 transition-colors">FAQ</a>
+      </nav>
+
+      <!-- Action Buttons & Audio Toggle -->
+      <div class="hidden md:flex items-center gap-4">
+        <!-- Ambient Sound Toggle -->
+        <button id="soundToggle" title="Ativar som de fogueira" class="p-2.5 rounded-xl border border-fire-800/60 bg-fire-950/40 hover:bg-fire-900/60 text-amber-400 transition-all flex items-center gap-2 text-xs font-bold">
+          <i id="soundIcon" class="fa-solid fa-volume-xmark"></i>
+          <span id="soundText" class="hidden lg:inline">Som 🔥</span>
+        </button>
+
+        <!-- Pump.fun Main CTA -->
+        <a href="https://pump.fun" target="_blank" rel="noopener noreferrer" class="relative group px-6 py-2.5 rounded-xl font-display font-bold text-sm tracking-wide text-black bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 hover:from-amber-300 hover:to-red-400 shadow-lg shadow-magma/30 hover:shadow-magma/60 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 overflow-hidden">
+          <span class="relative z-10 flex items-center gap-2">
+            <i class="fa-solid fa-fire text-base"></i>
+            <span>Comprar no Pump.fun</span>
+          </span>
+          <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <div class="md:hidden flex items-center gap-2">
+        <button id="mobileSoundToggle" class="p-2 rounded-lg border border-fire-800/60 bg-fire-950/40 text-amber-400">
+          <i id="mobileSoundIcon" class="fa-solid fa-volume-xmark"></i>
+        </button>
+        <button id="mobileMenuBtn" class="p-2 text-slate-300 hover:text-white focus:outline-none" aria-label="Abrir menu">
+          <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cardbg/95 backdrop-blur-2xl border-b border-fire-900/60 px-6 py-6 space-y-4">
+      <a href="#sobre" class="block text-base font-semibold text-slate-200 hover:text-amber-400 py-1">Sobre</a>
+      <a href="#bonding-curve" class="block text-base font-semibold text-slate-200 hover:text-amber-400 py-1">Bonding Curve</a>
+      <a href="#tokenomics" class="block text-base font-semibold text-slate-200 hover:text-amber-400 py-1">Tokenomics</a>
+      <a href="#como-comprar" class="block text-base font-semibold text-slate-200 hover:text-amber-400 py-1">Como Comprar</a>
+      <a href="#burnmap" class="block text-base font-semibold text-slate-200 hover:text-amber-400 py-1">Burnmap</a>
+      <a href="#faq" class="block text-base font-semibold text-slate-200 hover:text-amber-400 py-1">FAQ</a>
+      
+      <div class="pt-4 border-t border-fire-900/60 flex flex-col gap-3">
+        <a href="https://pump.fun" target="_blank" class="w-full text-center py-3 rounded-xl font-display font-bold text-black bg-gradient-to-r from-amber-400 to-red-500 shadow-lg shadow-magma/40 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-fire"></i>
+          Comprar no Pump.fun
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-[calc(100vh-5rem)] flex items-center justify-center py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Left: Copy & Actions -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6 sm:space-y-8">
+          
+          <!-- Badges -->
+          <div class="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wide bg-gradient-to-r from-magma/20 to-ember/20 border border-fire-500/40 text-amber-300 shadow-sm shadow-magma/20 backdrop-blur-md">
+              <i class="fa-solid fa-bolt text-ember"></i>
+              Solana Blockchain
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wide bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 backdrop-blur-md">
+              <i class="fa-solid fa-shield-halved"></i>
+              Mint & Freeze Revogado
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wide bg-fire-500/10 border border-fire-500/30 text-fire-400 backdrop-blur-md">
+              🔥 100% Fair Launch
+            </span>
+          </div>
+
+          <!-- Main Title -->
+          <h1 class="text-4xl sm:text-6xl xl:text-7xl font-display font-black tracking-tight leading-[1.1]">
+            TUDO QUEIMA. <br/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 drop-shadow-[0_0_35px_rgba(249,115,22,0.4)]">
+              MENOS A NOSSA LUA.
+            </span>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+            Bem-vindo à <strong class="text-amber-400 font-bold">$BURN</strong>: a memecoin mais insana, quente e deflacionária na <strong class="text-slate-100">Pump.fun</strong>. Se você não aguenta o calor, fique fora da cozinha dos degens!
+          </p>
+
+          <!-- CONTRACT ADDRESS (CA) BOX -->
+          <div class="bg-cardbg/90 border border-fire-800/80 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-magma/10 max-w-xl mx-auto lg:mx-0 backdrop-blur-md relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-magma/10 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2 font-semibold">
+              <span class="flex items-center gap-1.5 text-fire-400 uppercase tracking-wider font-bold">
+                <i class="fa-solid fa-file-contract"></i>
+                Contrato Oficial (CA Solana)
+              </span>
+              <span class="text-emerald-400 flex items-center gap-1 text-[11px]">
+                <i class="fa-solid fa-circle-check"></i> Verificado
+              </span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-2">
+              <div class="w-full bg-black/60 rounded-xl px-4 py-3 font-mono text-xs sm:text-sm text-slate-300 border border-fire-950 truncate select-all">
+                <span id="caAddress">BurnPumpFunXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span>
+              </div>
+              <button id="copyCaBtn" class="w-full sm:w-auto px-5 py-3 rounded-xl font-display font-bold text-xs sm:text-sm bg-fire-800/80 hover:bg-fire-700 text-amber-300 border border-fire-600/50 flex items-center justify-center gap-2 transition-all active:scale-95 whitespace-nowrap shadow-md hover:shadow-magma/40">
+                <i class="fa-regular fa-copy"></i>
+                <span id="copyBtnText">Copiar CA</span>
+              </button>
+            </div>
+            
+            <p class="text-[11px] text-slate-500 mt-2 text-center sm:text-left">
+              * Cole na Pump.fun, Phantom ou Jupiter para negociar com segurança máxima.
+            </p>
+          </div>
+
+          <!-- CTAs & Socials -->
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="https://pump.fun" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-xl font-display font-black text-base text-black bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 hover:from-amber-300 hover:to-red-400 shadow-xl shadow-magma/40 hover:shadow-magma/80 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3">
+              <i class="fa-solid fa-fire text-lg animate-bounce"></i>
+              <span>COMPRAR NA PUMP.FUN</span>
+            </a>
+
+            <a href="https://dexscreener.com" target="_blank" rel="noopener noreferrer" class="px-6 py-4 rounded-xl font-display font-bold text-base text-slate-200 bg-cardbg/80 hover:bg-fire-950/80 border border-fire-800/70 hover:border-fire-600 shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5">
+              <i class="fa-solid fa-chart-line text-emerald-400"></i>
+              <span>DexScreener</span>
+            </a>
+
+            <!-- Social Links -->
+            <div class="flex items-center gap-2.5">
+              <a href="https://t.me" target="_blank" title="Telegram" class="w-13 h-13 p-3.5 rounded-xl bg-cardbg/80 hover:bg-fire-900/60 border border-fire-800/60 text-amber-400 hover:text-white transition-all hover:scale-110 flex items-center justify-center">
+                <i class="fa-brands fa-telegram text-xl"></i>
+              </a>
+              <a href="https://x.com" target="_blank" title="X (Twitter)" class="w-13 h-13 p-3.5 rounded-xl bg-cardbg/80 hover:bg-fire-900/60 border border-fire-800/60 text-amber-400 hover:text-white transition-all hover:scale-110 flex items-center justify-center">
+                <i class="fa-brands fa-x-twitter text-xl"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="grid grid-cols-3 gap-4 pt-4 border-t border-fire-950 max-w-xl mx-auto lg:mx-0">
+            <div>
+              <span class="block text-slate-400 text-xs font-semibold">Taxa (Tax)</span>
+              <span class="font-display font-black text-xl text-amber-400">0% / 0%</span>
+            </div>
+            <div>
+              <span class="block text-slate-400 text-xs font-semibold">Supply Total</span>
+              <span class="font-display font-black text-xl text-amber-400">1.000.000.000</span>
+            </div>
+            <div>
+              <span class="block text-slate-400 text-xs font-semibold">Status</span>
+              <span class="font-display font-black text-xl text-emerald-400 flex items-center gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Em Chamas 🔥
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: 3D Mascot Artwork Showcase -->
+        <div class="lg:col-span-5 flex justify-center items-center relative">
+          
+          <!-- Outer Fire Halo Effect -->
+          <div class="absolute -inset-4 bg-gradient-to-tr from-magma via-ember to-yellow-500 rounded-3xl opacity-40 blur-3xl animate-flame-glow pointer-events-none"></div>
+
+          <!-- Mascot Frame Card -->
+          <div class="relative w-full max-w-md bg-gradient-to-b from-fire-950/80 to-cardbg border-2 border-fire-600/60 rounded-3xl p-4 sm:p-6 shadow-2xl shadow-magma/40 backdrop-blur-xl animate-float">
+            
+            <!-- Glow Badges -->
+            <div class="absolute -top-3.5 -right-3.5 bg-gradient-to-r from-red-600 to-amber-500 text-white font-display font-black text-xs px-4 py-1.5 rounded-full shadow-lg shadow-magma/50 border border-amber-300 uppercase tracking-widest flex items-center gap-1.5">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+              BURN OR GET BURNED
+            </div>
+
+            <div class="relative rounded-2xl overflow-hidden border border-fire-700/50 shadow-inner group">
+              <img src="assets/burn_mascot.jpg" alt="Mascote $BURN Solana" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
+              
+              <!-- Subtle bottom overlay gradient -->
+              <div class="absolute inset-0 bg-gradient-to-t from-darkbg/90 via-transparent to-transparent"></div>
+              
+              <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                <div>
+                  <span class="text-xs text-amber-300 font-bold uppercase tracking-wider block">O Guardião do Fogo</span>
+                  <span class="font-display font-black text-lg text-white">$BURN DeGen</span>
+                </div>
+                <div class="px-3 py-1 rounded-lg bg-black/60 border border-fire-500/40 text-xs font-mono text-emerald-400 flex items-center gap-1">
+                  <i class="fa-solid fa-check"></i> Pump.fun Ready
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini Quote Banner -->
+            <div class="mt-4 p-3 rounded-xl bg-fire-950/60 border border-fire-900/60 text-center">
+              <p class="text-xs italic text-amber-200/90 font-medium">
+                "No mercado de cripto, apenas o ouro verdadeiro resiste às chamas." 💎🔥
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LIVE PUMP.FUN BONDING CURVE TRACKER & SIMULATOR -->
+    <section id="bonding-curve" class="py-20 px-4 sm:px-6 lg:px-8 relative border-t border-fire-900/40 bg-cardbg/40">
+      <div class="max-w-5xl mx-auto">
+        
+        <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+          <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-fire-950 border border-fire-700/60 inline-flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie"></i>
+            Mecânica Pump.fun
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-display font-black">
+            BONDING CURVE <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">EM TEMPO REAL</span>
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base">
+            Na Pump.fun, cada compra impulsiona a curva. Ao atingir 100% da bonding curve (~$69k Market Cap), a liquidez é injetada automaticamente no Raydium e os tokens LP são queimados para sempre!
+          </p>
+        </div>
+
+        <!-- The Bonding Curve Interactive Card -->
+        <div class="bg-gradient-to-b from-cardbg to-black/80 border border-fire-700/60 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-magma/20 relative overflow-hidden backdrop-blur-xl">
+          
+          <!-- Background Glow -->
+          <div class="absolute -bottom-10 -right-10 w-72 h-72 bg-magma/15 rounded-full blur-3xl pointer-events-none"></div>
+
+          <!-- Progress Bar Header -->
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+            <div>
+              <span class="text-xs uppercase font-extrabold tracking-wider text-slate-400">Progresso de Migração para Raydium</span>
+              <div class="flex items-baseline gap-3 mt-1">
+                <span id="curvePercent" class="font-display font-black text-4xl sm:text-5xl text-amber-400">68%</span>
+                <span class="text-xs text-slate-400 font-mono">(Alvo: 100% = Raydium Listing)</span>
+              </div>
+            </div>
+            <div class="text-left sm:text-right">
+              <span class="text-xs uppercase font-extrabold tracking-wider text-slate-400">Market Cap Estimado</span>
+              <span id="simulatedMcap" class="block font-display font-black text-2xl text-emerald-400 mt-1">\$46.920 USD</span>
+            </div>
+          </div>
+
+          <!-- Animated Progress Bar -->
+          <div class="relative w-full h-8 bg-black/80 rounded-2xl overflow-hidden border border-fire-900/80 p-1 mb-8">
+            <div id="curveProgressBar" class="h-full rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 transition-all duration-1000 shadow-lg shadow-magma/50 relative flex items-center justify-end pr-3" style="width: 68%;">
+              <span class="text-[11px] font-black text-white drop-shadow">🔥 RUNNING</span>
+            </div>
+          </div>
+
+          <!-- Milestones Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center">
+            <div class="p-4 rounded-2xl bg-fire-950/40 border border-fire-900/50">
+              <span class="text-xs text-slate-400 block mb-1">0% - Faísca Inicial</span>
+              <span class="font-display font-bold text-base text-slate-200">Fair Launch Aberto</span>
+              <span class="text-[11px] text-emerald-400 block mt-1"><i class="fa-solid fa-check"></i> Concluído</span>
+            </div>
+            <div class="p-4 rounded-2xl bg-fire-900/30 border border-fire-600/60 shadow-md shadow-magma/20">
+              <span class="text-xs text-amber-400 block mb-1 font-bold">FASE ATUAL: Aquecimento</span>
+              <span class="font-display font-bold text-base text-white">Bonding Curve Pump.fun</span>
+              <span class="text-[11px] text-amber-300 block mt-1 animate-pulse"><i class="fa-solid fa-fire"></i> Acumulando SOL</span>
+            </div>
+            <div class="p-4 rounded-2xl bg-fire-950/40 border border-fire-900/50">
+              <span class="text-xs text-slate-400 block mb-1">100% - Supernova</span>
+              <span class="font-display font-bold text-base text-slate-200">Migração Raydium + Queima</span>
+              <span class="text-[11px] text-slate-500 block mt-1"><i class="fa-solid fa-lock"></i> Próximo Passo</span>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE CALCULATOR: Sol to $BURN -->
+          <div class="border-t border-fire-900/60 pt-6">
+            <h4 class="text-base font-display font-bold text-slate-200 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-amber-400"></i>
+              Simulador de Compra (Quantos $BURN você recebe?)
+            </h4>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+              <div class="sm:col-span-5 relative">
+                <label class="text-xs text-slate-400 block mb-1 font-semibold">Você investe (SOL):</label>
+                <div class="relative">
+                  <input type="number" id="solInput" value="1" min="0.1" step="0.1" class="w-full bg-black/70 border border-fire-800 rounded-xl px-4 py-3 font-mono text-white text-lg focus:outline-none focus:border-amber-400 transition-colors pr-16" />
+                  <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-amber-400 text-sm">SOL</span>
+                </div>
+              </div>
+
+              <div class="sm:col-span-2 flex justify-center text-fire-500 text-xl py-2 sm:py-0">
+                <i class="fa-solid fa-arrow-right sm:rotate-0 rotate-90"></i>
+              </div>
+
+              <div class="sm:col-span-5">
+                <label class="text-xs text-slate-400 block mb-1 font-semibold">Você recebe aproximadamente:</label>
+                <div class="bg-black/70 border border-fire-800/80 rounded-xl px-4 py-3 font-mono text-lg text-amber-300 font-bold flex items-center justify-between">
+                  <span id="burnOutput">12.500.000</span>
+                  <span class="text-xs text-fire-400 font-sans font-bold">$BURN</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex flex-wrap justify-between items-center gap-4 text-xs text-slate-400">
+              <span>* Cálculo baseado na taxa atual da curva algorítmica da pump.fun.</span>
+              <a href="https://pump.fun" target="_blank" class="text-amber-400 hover:text-amber-300 font-bold underline flex items-center gap-1">
+                Ir comprar agora na Pump.fun <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SOBRE / POR QUE $BURN? -->
+    <section id="sobre" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-fire-950 border border-fire-700/60 inline-flex items-center gap-2">
+          <i class="fa-solid fa-skull"></i>
+          Degen Lore
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-display font-black">
+          POR QUE A <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600">$BURN</span> É DIFERENTE?
+        </h2>
+        <p class="text-slate-300 text-base sm:text-lg">
+          No cemitério de memecoins que morrem em 5 minutos, a $BURN foi forjada na lava para sobreviver. Aqui o fogo não destrói: purifica a comunidade dos mãos de alface!
+        </p>
+      </div>
+
+      <!-- 4 Core Pillars Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Card 1 -->
+        <div class="bg-cardbg/80 border border-fire-900/60 hover:border-fire-600/80 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-magma/20 group">
+          <div class="w-14 h-14 rounded-2xl bg-fire-950 border border-fire-700/60 flex items-center justify-center text-2xl text-amber-400 group-hover:scale-110 transition-transform mb-6 shadow-inner">
+            <i class="fa-solid fa-ban"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-2 group-hover:text-amber-300 transition-colors">
+            Zero Impostos (0% Tax)
+          </h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Sem taxas escondidas de compra ou venda. 100% do seu SOL compra $BURN, e 100% dos seus lucros são seus. Sem intermediários gananciosos.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-cardbg/80 border border-fire-900/60 hover:border-fire-600/80 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-magma/20 group">
+          <div class="w-14 h-14 rounded-2xl bg-fire-950 border border-fire-700/60 flex items-center justify-center text-2xl text-red-500 group-hover:scale-110 transition-transform mb-6 shadow-inner">
+            <i class="fa-solid fa-lock-open"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-2 group-hover:text-amber-300 transition-colors">
+            100% Fair Launch
+          </h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Sem pré-venda secreta para VCs ou insiders. Todos começam do mesmo ponto de partida na bonding curve da pump.fun de forma transparente.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-cardbg/80 border border-fire-900/60 hover:border-fire-600/80 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-magma/20 group">
+          <div class="w-14 h-14 rounded-2xl bg-fire-950 border border-fire-700/60 flex items-center justify-center text-2xl text-ember group-hover:scale-110 transition-transform mb-6 shadow-inner">
+            <i class="fa-solid fa-fire-burner"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-2 group-hover:text-amber-300 transition-colors">
+            LP Queimada no Raydium
+          </h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Ao atingir a curva de $69k, o pool de liquidez inicial é transferido para a Raydium e os tokens LP são imediatamente incinerados. Impossível haver rug pull de liquidez!
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-cardbg/80 border border-fire-900/60 hover:border-fire-600/80 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-magma/20 group">
+          <div class="w-14 h-14 rounded-2xl bg-fire-950 border border-fire-700/60 flex items-center justify-center text-2xl text-emerald-400 group-hover:scale-110 transition-transform mb-6 shadow-inner">
+            <i class="fa-solid fa-bolt-lightning"></i>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-2 group-hover:text-amber-300 transition-colors">
+            Solana Speed
+          </h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Transações instantâneas em milissegundos e taxas na casa dos centavos de dólar. Entre e saia sem deixar suas economias em taxas de gás!
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TOKENOMICS SECTION -->
+    <section id="tokenomics" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-fire-900/40 bg-cardbg/30">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-fire-950 border border-fire-700/60 inline-flex items-center gap-2">
+            <i class="fa-solid fa-coins"></i>
+            A Física do Fogo
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-display font-black">
+            TOKENOMICS <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">TRANSPARENTE</span>
+          </h2>
+          <p class="text-slate-300 text-base">
+            Distribuição 100% justa e sem enrolação matemática. O que você vê é exatamente o que está na blockchain.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Visual Chart Card -->
+          <div class="lg:col-span-5 bg-cardbg border border-fire-800/80 rounded-3xl p-8 shadow-2xl relative overflow-hidden text-center">
+            <div class="relative w-56 h-56 mx-auto mb-6 flex items-center justify-center">
+              
+              <!-- Circular graphic representation -->
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <!-- Background circle -->
+                <circle cx="50" cy="50" r="40" stroke="#1f110c" stroke-width="14" fill="none" />
+                <!-- 100% Fair Launch Segment -->
+                <circle cx="50" cy="50" r="40" stroke="url(#flameGradient)" stroke-width="14" stroke-dasharray="251.2" stroke-dashoffset="0" fill="none" stroke-linecap="round" />
+                <defs>
+                  <linearGradient id="flameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fb923c" />
+                    <stop offset="50%" stop-color="#ea580c" />
+                    <stop offset="100%" stop-color="#dc2626" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="font-display font-black text-4xl text-amber-400">100%</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pump.fun</span>
+              </div>
+            </div>
+
+            <h3 class="font-display font-bold text-2xl text-white mb-2">1.000.000.000</h3>
+            <p class="text-sm text-slate-400 font-mono">SUPPLY TOTAL DE $BURN</p>
+            
+            <div class="mt-6 pt-6 border-t border-fire-900/60 flex justify-around text-xs font-semibold text-slate-300">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-amber-400 text-[10px]"></i> Comunidade: 100%</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-red-500 text-[10px]"></i> Time: 0%</span>
+            </div>
+          </div>
+
+          <!-- Tokenomics Details List -->
+          <div class="lg:col-span-7 space-y-4">
+            
+            <div class="p-6 rounded-2xl bg-cardbg/90 border border-fire-900/60 hover:border-fire-700 transition-colors flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-fire-950 flex items-center justify-center text-amber-400 text-xl border border-fire-800">
+                  <i class="fa-solid fa-tag"></i>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-lg text-white">Nome & Ticker</h4>
+                  <p class="text-xs text-slate-400">Identificação na Solana</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="font-display font-black text-xl text-amber-400">Burn ($BURN)</span>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-cardbg/90 border border-fire-900/60 hover:border-fire-700 transition-colors flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-fire-950 flex items-center justify-center text-red-500 text-xl border border-fire-800">
+                  <i class="fa-solid fa-percent"></i>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-lg text-white">Taxas de Transação</h4>
+                  <p class="text-xs text-slate-400">Compra e Venda</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="font-display font-black text-xl text-emerald-400">0% Compra / 0% Venda</span>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-cardbg/90 border border-fire-900/60 hover:border-fire-700 transition-colors flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-fire-950 flex items-center justify-center text-orange-400 text-xl border border-fire-800">
+                  <i class="fa-solid fa-water"></i>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-lg text-white">Liquidez Inicial</h4>
+                  <p class="text-xs text-slate-400">Bonding curve no pump.fun</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="font-display font-black text-lg text-amber-300">Migração Raydium Automática</span>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-cardbg/90 border border-fire-900/60 hover:border-fire-700 transition-colors flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-fire-950 flex items-center justify-center text-purple-400 text-xl border border-fire-800">
+                  <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-lg text-white">Rede (Blockchain)</h4>
+                  <p class="text-xs text-slate-400">Padrão SPL Token</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="font-display font-black text-xl text-purple-300">Solana (SOL)</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COMO COMPRAR PASSO A PASSO -->
+    <section id="como-comprar" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-fire-950 border border-fire-700/60 inline-flex items-center gap-2">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Tutorial Degen
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-display font-black">
+          COMO COMPRAR <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">$BURN</span> EM 4 PASSOS
+        </h2>
+        <p class="text-slate-300 text-base">
+          Nunca comprou na Pump.fun antes? É mais simples que fritar um ovo. Siga as instruções abaixo:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Step 1 -->
+        <div class="bg-cardbg border border-fire-900/80 rounded-3xl p-6 relative flex flex-col justify-between hover:border-fire-600 transition-all">
+          <div class="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-red-500 text-black font-display font-black flex items-center justify-center text-lg shadow-lg">
+            1
+          </div>
+          <div class="pt-4">
+            <div class="text-purple-400 text-3xl mb-4">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white mb-2">Crie uma Carteira Solana</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Baixe a extensão ou app da <strong>Phantom Wallet</strong> ou <strong>Solflare</strong>. Guarde suas 12 palavras secretas com sua vida!
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-fire-950">
+            <span class="text-xs text-amber-400 font-bold">Recomendado: phantom.app</span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-cardbg border border-fire-900/80 rounded-3xl p-6 relative flex flex-col justify-between hover:border-fire-600 transition-all">
+          <div class="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-red-500 text-black font-display font-black flex items-center justify-center text-lg shadow-lg">
+            2
+          </div>
+          <div class="pt-4">
+            <div class="text-emerald-400 text-3xl mb-4">
+              <i class="fa-solid fa-money-bill-transfer"></i>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white mb-2">Adquira Solana ($SOL)</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Compre SOL em qualquer exchange (Binance, Bybit, Coinbase, Mercado Bitcoin) e envie para o endereço público da sua carteira Phantom.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-fire-950">
+            <span class="text-xs text-emerald-400 font-bold">Dica: Deixe ~0.02 SOL para gás</span>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-cardbg border border-fire-900/80 rounded-3xl p-6 relative flex flex-col justify-between hover:border-fire-600 transition-all">
+          <div class="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-red-500 text-black font-display font-black flex items-center justify-center text-lg shadow-lg">
+            3
+          </div>
+          <div class="pt-4">
+            <div class="text-amber-400 text-3xl mb-4">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white mb-2">Conecte na Pump.fun</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Acesse a página oficial da $BURN na Pump.fun através do nosso link seguro ou cole o nosso Contrato (CA) na barra de busca. Clique em "Connect Wallet".
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-fire-950">
+            <span class="text-xs text-amber-400 font-bold">Verifique sempre a CA oficial</span>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="bg-cardbg border border-fire-900/80 rounded-3xl p-6 relative flex flex-col justify-between hover:border-fire-600 transition-all">
+          <div class="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-red-500 text-black font-display font-black flex items-center justify-center text-lg shadow-lg">
+            4
+          </div>
+          <div class="pt-4">
+            <div class="text-red-500 text-3xl mb-4">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+            </div>
+            <h3 class="font-display font-bold text-xl text-white mb-2">Troque SOL por $BURN</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Digite a quantia desejada em SOL, confirme a transação na sua carteira e pronto! Agora você faz parte do culto das chamas.
+            </p>
+          </div>
+          <div class="pt-6 mt-4 border-t border-fire-950">
+            <span class="text-xs text-red-400 font-bold">HODL até a estratosfera!</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Banner -->
+      <div class="mt-12 text-center">
+        <a href="https://pump.fun" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-display font-black text-black bg-gradient-to-r from-amber-400 to-red-500 hover:from-amber-300 hover:to-red-400 shadow-xl shadow-magma/30 hover:scale-105 active:scale-95 transition-all text-base">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          ABRIR PUMP.FUN AGORA
+        </a>
+      </div>
+
+    </section>
+
+    <!-- BURNMAP (ROADMAP) -->
+    <section id="burnmap" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-fire-900/40 bg-cardbg/40">
+      <div class="max-w-6xl mx-auto">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-fire-950 border border-fire-700/60 inline-flex items-center gap-2">
+            <i class="fa-solid fa-map"></i>
+            Estratégia
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-display font-black">
+            O <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600">BURNMAP</span>
+          </h2>
+          <p class="text-slate-300 text-base">
+            O plano de conquista em chamas. Sem promessas falsas de metaverso, apenas puro hype degen e valorização.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Phase 1 -->
+          <div class="bg-cardbg border border-fire-800/80 rounded-3xl p-8 relative overflow-hidden group hover:border-amber-400 transition-colors">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl"></div>
+            <div class="text-xs font-black uppercase tracking-widest text-amber-400 mb-2">FASE 1</div>
+            <h3 class="font-display font-black text-2xl text-white mb-4">A Faísca (The Spark)</h3>
+            <ul class="space-y-3 text-sm text-slate-300">
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                Lançamento stealth na Pump.fun
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                Website oficial e mascote 3D
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                Criação do Telegram e Twitter/X
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                Primeiros 500 Holders degens
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                Invasões no Twitter & Raid bots
+              </li>
+            </ul>
+          </div>
+
+          <!-- Phase 2 -->
+          <div class="bg-cardbg border border-fire-600 rounded-3xl p-8 relative overflow-hidden group shadow-xl shadow-magma/20">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-magma/20 rounded-full blur-2xl"></div>
+            <div class="text-xs font-black uppercase tracking-widest text-red-400 mb-2 flex items-center gap-1.5">
+              FASE 2 <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-600/30 text-red-300">EM ANDAMENTO</span>
+            </div>
+            <h3 class="font-display font-black text-2xl text-white mb-4">A Labareda (The Flame)</h3>
+            <ul class="space-y-3 text-sm text-slate-300">
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400 animate-pulse"></i>
+                100% da Bonding Curve na Pump.fun
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400 animate-pulse"></i>
+                Migração para Raydium & Queima de LP
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                DexScreener e DEXTools Trending
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                Parcerias com Callers de Solana
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                Meta: 2.500 Holders orgânicos
+              </li>
+            </ul>
+          </div>
+
+          <!-- Phase 3 -->
+          <div class="bg-cardbg border border-fire-800/80 rounded-3xl p-8 relative overflow-hidden group hover:border-amber-400 transition-colors">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-full blur-2xl"></div>
+            <div class="text-xs font-black uppercase tracking-widest text-amber-400 mb-2">FASE 3</div>
+            <h3 class="font-display font-black text-2xl text-white mb-4">A Supernova (Inferno)</h3>
+            <ul class="space-y-3 text-sm text-slate-300">
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-slate-400"></i>
+                CoinGecko & CoinMarketCap Fast-Track
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-slate-400"></i>
+                Primeiras listagens em CEXs Tier 2/3
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-slate-400"></i>
+                Grande Queima Comemorativa da Comunidade
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-slate-400"></i>
+                Merchandise oficial $BURN (Hoodies de fogo)
+              </li>
+              <li class="flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-slate-400"></i>
+                Atingir Market Cap de 8 dígitos ($10M+)
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HYPE GENERATOR & MEME SOUNDBOARD -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
+      <div class="bg-gradient-to-r from-fire-950/60 via-cardbg to-fire-950/60 border border-fire-700/60 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+        
+        <span class="text-xs font-black uppercase tracking-widest text-amber-400 block mb-2">
+          🔥 GERADOR DE HYPE DEGEN
+        </span>
+        
+        <h3 class="text-2xl sm:text-4xl font-display font-black text-white mb-6">
+          SINTA O CALOR DA COMUNIDADE
+        </h3>
+
+        <div class="bg-black/70 border border-fire-900/90 rounded-2xl p-6 mb-8 max-w-2xl mx-auto min-h-[100px] flex items-center justify-center">
+          <p id="hypeQuote" class="text-lg sm:text-xl font-display font-bold text-amber-300 italic">
+            "Paper hands viram cinzas. Diamond hands forjam diamantes no fogo da $BURN!"
+          </p>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4">
+          <button id="generateHypeBtn" class="px-6 py-3 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black shadow-lg shadow-magma/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Gerar Nova Frase de Efeito</span>
+          </button>
+          <button id="soundFxBtn" class="px-6 py-3 rounded-xl font-display font-bold text-sm bg-cardbg hover:bg-fire-900/60 text-amber-300 border border-fire-700 flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
+            <i class="fa-solid fa-bell"></i>
+            <span>Tocar Efeito Sonoro 🔥</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-fire-900/40">
+      
+      <div class="text-center mb-16 space-y-4">
+        <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-fire-950 border border-fire-700/60 inline-flex items-center gap-2">
+          <i class="fa-solid fa-circle-question"></i>
+          Tire Suas Dúvidas
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-display font-black">
+          PERGUNTAS <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">FREQUENTES</span>
+        </h2>
+        <p class="text-slate-300 text-base">
+          Tudo que você precisa entender antes de colocar seus preciosos SOLs no fogo.
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        
+        <!-- FAQ Item 1 -->
+        <div class="faq-item bg-cardbg border border-fire-900/80 rounded-2xl overflow-hidden transition-colors">
+          <button class="faq-question w-full p-6 text-left font-display font-bold text-lg text-white flex justify-between items-center gap-4">
+            <span>O que é a moeda $BURN?</span>
+            <i class="fa-solid fa-chevron-down text-amber-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 px-6 text-slate-300 text-sm leading-relaxed">
+            <div class="pb-6">
+              A $BURN é uma memecoin lançada na rede Solana através da plataforma Pump.fun. Ela foi criada com a temática de fogo e deflação extrema, celebrando a cultura degen e recompensando holders que não entram em pânico com volatilidade.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="faq-item bg-cardbg border border-fire-900/80 rounded-2xl overflow-hidden transition-colors">
+          <button class="faq-question w-full p-6 text-left font-display font-bold text-lg text-white flex justify-between items-center gap-4">
+            <span>Como funciona a plataforma Pump.fun?</span>
+            <i class="fa-solid fa-chevron-down text-amber-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 px-6 text-slate-300 text-sm leading-relaxed">
+            <div class="pb-6">
+              A Pump.fun é um protocolo de lançamento justo onde qualquer pessoa pode comprar tokens ao longo de uma curva matemática pré-estabelecida (Bonding Curve). Não existe equipe com tokens bloqueados para dump inicial. Quando a curva atinge 100% (~$69.000 de Market Cap), a liquidez é injetada automaticamente na Raydium e os tokens LP são queimados para sempre.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="faq-item bg-cardbg border border-fire-900/80 rounded-2xl overflow-hidden transition-colors">
+          <button class="faq-question w-full p-6 text-left font-display font-bold text-lg text-white flex justify-between items-center gap-4">
+            <span>Existe risco de "Rug Pull" no token?</span>
+            <i class="fa-solid fa-chevron-down text-amber-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 px-6 text-slate-300 text-sm leading-relaxed">
+            <div class="pb-6">
+              O contrato na Pump.fun é 100% seguro por arquitetura: as funções de mint (criação de novos tokens) e freeze (congelamento de carteiras) são desabilitadas na criação. Além disso, a liquidez transferida para a Raydium tem os tokens LP queimados automaticamente.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="faq-item bg-cardbg border border-fire-900/80 rounded-2xl overflow-hidden transition-colors">
+          <button class="faq-question w-full p-6 text-left font-display font-bold text-lg text-white flex justify-between items-center gap-4">
+            <span>Quais são as taxas (taxes) para comprar ou vender?</span>
+            <i class="fa-solid fa-chevron-down text-amber-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 px-6 text-slate-300 text-sm leading-relaxed">
+            <div class="pb-6">
+              Zero! As taxas do contrato de $BURN são de 0% na compra e 0% na venda. Você apenas paga a taxa padrão irrisória da rede Solana (uma fração mínima de centavo) e a pequena taxa nativa da DEX Pump.fun.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="faq-item bg-cardbg border border-fire-900/80 rounded-2xl overflow-hidden transition-colors">
+          <button class="faq-question w-full p-6 text-left font-display font-bold text-lg text-white flex justify-between items-center gap-4">
+            <span>Qual carteira devo usar para comprar?</span>
+            <i class="fa-solid fa-chevron-down text-amber-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 px-6 text-slate-300 text-sm leading-relaxed">
+            <div class="pb-6">
+              Recomendamos a <strong>Phantom</strong> ou a <strong>Solflare</strong>, tanto no navegador de desktop quanto no aplicativo para celular iOS/Android.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- FOOTER & LEGAL DISCLAIMER -->
+    <footer class="border-t border-fire-900/60 bg-black/90 py-16 px-4 sm:px-6 lg:px-8 text-slate-400 text-xs">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+        
+        <!-- Brand Info -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="flex items-center gap-3">
+            <img src="assets/burn_mascot.jpg" alt="Logo $BURN" class="w-10 h-10 rounded-xl border border-fire-600/60 object-cover" />
+            <span class="font-display font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">
+              $BURN
+            </span>
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed max-w-sm">
+            A memecoin mais incandescente da Pump.fun na rede Solana. Feita por degens, para degens. Sinta o calor da comunidade e queime a mediocridade.
+          </p>
+          <div class="flex items-center gap-3 pt-2">
+            <a href="https://t.me" target="_blank" class="w-10 h-10 rounded-lg bg-cardbg border border-fire-900 hover:border-amber-400 flex items-center justify-center text-amber-400 hover:text-white transition-colors">
+              <i class="fa-brands fa-telegram text-base"></i>
+            </a>
+            <a href="https://x.com" target="_blank" class="w-10 h-10 rounded-lg bg-cardbg border border-fire-900 hover:border-amber-400 flex items-center justify-center text-amber-400 hover:text-white transition-colors">
+              <i class="fa-brands fa-x-twitter text-base"></i>
+            </a>
+            <a href="https://pump.fun" target="_blank" class="w-10 h-10 rounded-lg bg-cardbg border border-fire-900 hover:border-amber-400 flex items-center justify-center text-amber-400 hover:text-white transition-colors">
+              <i class="fa-solid fa-fire text-base"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="font-display font-bold text-slate-200 text-sm uppercase tracking-wider">Navegação</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#sobre" class="hover:text-amber-400 transition-colors">Sobre a $BURN</a></li>
+            <li><a href="#bonding-curve" class="hover:text-amber-400 transition-colors">Bonding Curve</a></li>
+            <li><a href="#tokenomics" class="hover:text-amber-400 transition-colors">Tokenomics</a></li>
+            <li><a href="#como-comprar" class="hover:text-amber-400 transition-colors">Como Comprar</a></li>
+            <li><a href="#burnmap" class="hover:text-amber-400 transition-colors">Burnmap</a></li>
+            <li><a href="#faq" class="hover:text-amber-400 transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal Disclaimer Box -->
+        <div class="md:col-span-4 space-y-3">
+          <h4 class="font-display font-bold text-slate-200 text-sm uppercase tracking-wider">Aviso Legal (Disclaimer)</h4>
+          <p class="text-[11px] leading-relaxed text-slate-500 bg-cardbg/40 p-4 rounded-xl border border-fire-950">
+            <strong>$BURN</strong> é uma memecoin criada estritamente para entretenimento e propósitos humorísticos da comunidade. Criptoativos são altamente voláteis. Não invista dinheiro que você não possa perder. Não há garantia de valorização financeira. Sempre faça sua própria pesquisa (DYOR).
+          </p>
+        </div>
+
+      </div>
+
+      <div class="max-w-7xl mx-auto pt-8 border-t border-fire-950 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <p>&copy; 2026 $BURN Token Community. Todos os direitos reservados. Feito na Solana.</p>
+        <p class="flex items-center gap-1">
+          Feito com <i class="fa-solid fa-fire text-magma"></i> para os verdadeiros degens.
+        </p>
+      </div>
+
+    </footer>
+
+  </main>
+
+  <!-- Interactive Toast Notification for Copy -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-gradient-to-r from-fire-900 to-black border-2 border-amber-400 text-white px-5 py-3 rounded-2xl shadow-2xl shadow-magma/60 flex items-center gap-3">
+      <span class="text-xl">🔥</span>
+      <div>
+        <p class="font-display font-bold text-sm text-amber-300">Contrato Copiado!</p>
+        <p class="text-xs text-slate-300">Pronto para colar na Pump.fun ou Phantom.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
