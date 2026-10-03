@@ -401,3 +401,402 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+// -------------------------------------------------
+// 1. TAB SWITCHING LOGIC
+// -------------------------------------------------
+const tabButtons = document.querySelectorAll('.pg-tab-btn');
+const tabPanes   = document.querySelectorAll('.pg-tab-pane');
+
+function activateTab(targetId) {
+  tabButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.target === targetId);
+  });
+  tabPanes.forEach(pane => {
+    pane.classList.toggle('hidden', pane.id !== targetId);
+  });
+  localStorage.setItem('burnPlaygroundTab', targetId);
+}
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => activateTab(btn.dataset.target));
+});
+
+const savedTab = localStorage.getItem('burnPlaygroundTab');
+if (savedTab) {
+  activateTab(savedTab);
+} else if (tabButtons.length) {
+  activateTab(tabButtons[0].dataset.target);
+}
+
+// -------------------------------------------------
+// 2. BURN THE JEET – WHACK‑A‑MOLE STYLE GAME
+// -------------------------------------------------
+const whackOverlay   = document.getElementById('whackOverlay');
+const whackStartBtn  = document.getElementById('whackStartBtn');
+const whackScoreEl   = document.getElementById('whackScore');
+const whackTimerEl   = document.getElementById('whackTimer');
+const whackTweetBtn  = document.getElementById('whackTweetBtn');
+
+let whackScore = 0;
+let whackTime  = 30; // seconds
+let whackTimerId = null;
+let whackRunning = false;
+
+const TARGETS = [
+  {emoji: '🧻',   score: 5},   // paper
+  {emoji: '🐻',   score: 15},  // bear
+  {emoji: '💎',   score: 30}   // diamond
+];
+
+function randomizePits() {
+  const pits = document.querySelectorAll('.lava-pit');
+  pits.forEach(pit => {
+    pit.innerHTML = '';
+    const target = TARGETS[Math.floor(Math.random() * TARGETS.length)];
+    const span = document.createElement('span');
+    span.className = 'target-item';
+    span.textContent = target.emoji;
+    span.dataset.score = target.score;
+    pit.appendChild(span);
+  });
+}
+
+function handleWhack(event) {
+  if (!whackRunning) return;
+  const target = event.currentTarget.querySelector('.target-item');
+  if (!target) return;
+  const points = Number(target.dataset.score);
+  whackScore += points;
+  whackScoreEl.textContent = whackScore;
+  event.currentTarget.classList.add('hit');
+  setTimeout(() => event.currentTarget.classList.remove('hit'), 200);
+  playIgniteFx();
+  setTimeout(randomizePits, 500);
+}
+
+function startWhackGame() {
+  whackScore = 0;
+  whackTime  = 30;
+  whackScoreEl.textContent = whackScore;
+  whackTimerEl.textContent = whackTime;
+  whackOverlay.classList.add('hidden');
+  whackRunning = true;
+  const pits = document.querySelectorAll('.lava-pit');
+  pits.forEach(pit => pit.addEventListener('click', handleWhack));
+  whackTimerId = setInterval(() => {
+    whackTime--;
+    whackTimerEl.textContent = whackTime;
+    if (whackTime <= 0) endWhackGame();
+  }, 1000);
+  randomizePits();
+}
+
+function endWhackGame() {
+  whackRunning = false;
+  clearInterval(whackTimerId);
+  const pits = document.querySelectorAll('.lava-pit');
+  pits.forEach(pit => pit.removeEventListener('click', handleWhack));
+  const finalOverlay = document.getElementById('whackEndOverlay');
+  finalOverlay.querySelector('#finalWhackScore').textContent = whackScore;
+  finalOverlay.classList.remove('hidden');
+  if (whackTweetBtn) {
+    const tweet = encodeURIComponent(`I just scored ${whackScore} in Burn the Jeet! #BurnMemecoin`);
+    whackTweetBtn.href = `https://twitter.com/intent/tweet?text=${tweet}`;
+  }
+}
+
+const whackRestartBtn = document.getElementById('whackRestartBtn');
+if (whackRestartBtn) {
+  whackRestartBtn.addEventListener('click', () => {
+    document.getElementById('whackEndOverlay').classList.add('hidden');
+    startWhackGame();
+  });
+}
+if (whackStartBtn) whackStartBtn.addEventListener('click', startWhackGame);
+
+// -------------------------------------------------
+// 3. CATCH THE SOL – CANVAS SIDE‑SCROLLER
+// -------------------------------------------------
+const catchCanvas = document.getElementById('catchCanvas');
+const catchCtx    = catchCanvas?.getContext('2d');
+const catchOverlay = document.getElementById('catchOverlay');
+const catchStartBtn = document.getElementById('catchStartBtn');
+const catchScoreEl = document.getElementById('catchScore');
+const catchLivesEl = document.getElementById('catchLives');
+const catchTweetBtn = document.getElementById('catchTweetBtn');
+
+let catchGame = null;
+
+function initCatchGame() {
+  if (!catchCanvas) return null;
+  const state = {
+    playerX: catchCanvas.width / 2,
+    playerY: catchCanvas.height - 30,
+    width: 30,
+    height: 30,
+    speed: 4,
+    score: 0,
+    lives: 3,
+    objects: [],
+    lastSpawn: 0,
+    running: false,
+    keys: {left: false, right: false}
+  };
+
+  function drawPlayer() {
+    catchCtx.fillStyle = '#ff4500';
+    catchCtx.beginPath();
+    catchCtx.arc(state.playerX, state.playerY, 15, 0, Math.PI * 2);
+    catchCtx.fill();
+  }
+  function drawObject(obj) {
+    catchCtx.fillStyle = obj.color;
+    catchCtx.font = '24px sans-serif';
+    catchCtx.fillText(obj.emoji, obj.x, obj.y);
+  }
+  function spawnObject() {
+    const types = [
+      {emoji: '🟡', points: 10, color: '#ffd700', speed: 2},
+      {emoji: '🪣', points: -1, color: '#00bfff', speed: 2.5},
+      {emoji: '💧', points: -2, color: '#1e90ff', speed: 3}
+    ];
+    const choice = types[Math.floor(Math.random() * types.length)];
+    state.objects.push({
+      x: Math.random() * catchCanvas.width,
+      y: -30,
+      emoji: choice.emoji,
+      points: choice.points,
+      color: choice.color,
+      speed: choice.speed
+    });
+  }
+  function updateObjects() {
+    state.objects.forEach(o => o.y += o.speed);
+    state.objects = state.objects.filter(o => o.y < catchCanvas.height + 30);
+  }
+  function checkCollisions() {
+    state.objects.forEach((obj, idx) => {
+      const dx = Math.abs(state.playerX - obj.x);
+      const dy = Math.abs(state.playerY - obj.y);
+      if (dx < 20 && dy < 20) {
+        if (obj.points > 0) state.score += obj.points;
+        else state.lives += obj.points;
+        state.objects.splice(idx, 1);
+      }
+    });
+  }
+  function render() {
+    catchCtx.clearRect(0, 0, catchCanvas.width, catchCanvas.height);
+    drawPlayer();
+    state.objects.forEach(drawObject);
+  }
+  function loop(timestamp) {
+    if (!state.running) return;
+    const now = timestamp;
+    if (!state.lastFrame) state.lastFrame = now;
+    const delta = now - state.lastFrame;
+    state.lastFrame = now;
+    if (now - state.lastSpawn > 800) { spawnObject(); state.lastSpawn = now; }
+    if (state.keys.left) state.playerX -= state.speed;
+    if (state.keys.right) state.playerX += state.speed;
+    state.playerX = Math.max(15, Math.min(catchCanvas.width - 15, state.playerX));
+    updateObjects();
+    checkCollisions();
+    catchScoreEl.textContent = state.score;
+    catchLivesEl.textContent = state.lives;
+    if (state.lives <= 0) { endCatchGame(state); return; }
+    render();
+    requestAnimationFrame(loop);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft' || e.key === 'a') state.keys.left = true;
+    if (e.key === 'ArrowRight' || e.key === 'd') state.keys.right = true;
+  });
+  document.addEventListener('keyup', e => {
+    if (e.key === 'ArrowLeft' || e.key === 'a') state.keys.left = false;
+    if (e.key === 'ArrowRight' || e.key === 'd') state.keys.right = false;
+  });
+  const leftBtn = document.getElementById('mobileLeftBtn');
+  const rightBtn = document.getElementById('mobileRightBtn');
+  if (leftBtn) leftBtn.addEventListener('touchstart', () => state.keys.left = true);
+  if (rightBtn) rightBtn.addEventListener('touchstart', () => state.keys.right = true);
+  if (leftBtn) leftBtn.addEventListener('touchend', () => state.keys.left = false);
+  if (rightBtn) rightBtn.addEventListener('touchend', () => state.keys.right = false);
+
+  return {
+    start() { state.running = true; state.lastSpawn = performance.now(); state.lastFrame = performance.now(); requestAnimationFrame(loop); },
+    stop() { state.running = false; },
+    getState() { return {score: state.score, lives: state.lives}; }
+  };
+}
+
+function startCatchGame() {
+  catchOverlay.classList.add('hidden');
+  catchGame = initCatchGame();
+  catchGame?.start();
+}
+function endCatchGame(finalState) {
+  catchGame?.stop();
+  const endOverlay = document.getElementById('catchEndOverlay');
+  endOverlay.querySelector('#finalCatchScore').textContent = finalState.score;
+  endOverlay.classList.remove('hidden');
+  if (catchTweetBtn) {
+    const tweet = encodeURIComponent(`I scored ${finalState.score} in Catch the SOL! #BurnMemecoin`);
+    catchTweetBtn.href = `https://twitter.com/intent/tweet?text=${tweet}`;
+  }
+}
+const catchRestartBtn = document.getElementById('catchRestartBtn');
+if (catchRestartBtn) {
+  catchRestartBtn.addEventListener('click', () => {
+    document.getElementById('catchEndOverlay').classList.add('hidden');
+    startCatchGame();
+  });
+}
+if (catchStartBtn) catchStartBtn.addEventListener('click', startCatchGame);
+
+// -------------------------------------------------
+// 4. MEME FORGE – CANVAS IMAGE EDITOR
+// -------------------------------------------------
+const memeCanvas      = document.getElementById('memeCanvas');
+const memeCtx         = memeCanvas?.getContext('2d');
+const memeTemplateBtns = document.querySelectorAll('.meme-tpl-btn');
+const memeUploadInput = document.getElementById('memeImageUpload');
+const memeTopInput    = document.getElementById('memeTopText');
+const memeBottomInput = document.getElementById('memeBottomText');
+const memeFontSize    = document.getElementById('memeFontSize');
+const memeDownloadBtn = document.getElementById('downloadMemeBtn');
+const memeTweetBtn    = document.getElementById('tweetMemeBtn');
+
+let currentTemplate = null;
+let userImage = null;
+
+function loadTemplate(src) {
+  const img = new Image();
+  img.onload = () => { currentTemplate = img; drawMeme(); };
+  img.src = src;
+}
+function drawMeme() {
+  if (!memeCtx) return;
+  const w = memeCanvas.width = 500;
+  const h = memeCanvas.height = 500;
+  memeCtx.clearRect(0,0,w,h);
+  if (currentTemplate) memeCtx.drawImage(currentTemplate,0,0,w,h);
+  if (userImage) {
+    const ratio = Math.min(w/userImage.width, h/userImage.height);
+    const imgW = userImage.width * ratio * 0.8;
+    const imgH = userImage.height * ratio * 0.8;
+    memeCtx.drawImage(userImage, (w-imgW)/2, (h-imgH)/2, imgW, imgH);
+  }
+  const fontSize = Number(memeFontSize?.value) || 40;
+  memeCtx.font = `${fontSize}px Impact, Arial Black, sans-serif`;
+  memeCtx.textAlign = 'center';
+  memeCtx.fillStyle = 'white';
+  memeCtx.strokeStyle = 'black';
+  memeCtx.lineWidth = fontSize * 0.07;
+  const drawText = (txt, y) => {
+    if (!txt) return;
+    memeCtx.fillText(txt.toUpperCase(), w/2, y);
+    memeCtx.strokeText(txt.toUpperCase(), w/2, y);
+  };
+  drawText(memeTopInput?.value, fontSize + 10);
+  drawText(memeBottomInput?.value, h - 10);
+}
+
+memeTemplateBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    memeTemplateBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadTemplate(btn.dataset.src);
+  });
+});
+if (memeUploadInput) {
+  memeUploadInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => { userImage = img; drawMeme(); };
+    img.src = URL.createObjectURL(file);
+  });
+}
+[memeTopInput, memeBottomInput, memeFontSize].forEach(el => {
+  if (el) el.addEventListener('input', drawMeme);
+});
+if (memeDownloadBtn) {
+  memeDownloadBtn.addEventListener('click', () => {
+    const dataURL = memeCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'burn_meme.png';
+    a.click();
+  });
+}
+if (memeTweetBtn) {
+  memeTweetBtn.addEventListener('click', () => {
+    const tweet = encodeURIComponent('Check out my $BURN meme! #BurnMemecoin');
+    memeTweetBtn.href = `https://twitter.com/intent/tweet?text=${tweet}`;
+  });
+}
+
+// -------------------------------------------------
+// 5. HALL OF FLAME – GALLERY LIGHTBOX
+// -------------------------------------------------
+const galleryModal   = document.getElementById('galleryModal');
+const modalImg       = document.getElementById('galleryImg');
+const modalTitle     = document.getElementById('galleryTitle');
+const modalDesc      = document.getElementById('galleryDesc');
+const modalCloseBtn  = document.getElementById('closeGalleryModal');
+
+document.querySelectorAll('.gallery-trigger').forEach(el => {
+  el.addEventListener('click', () => {
+    const src   = el.dataset.src;
+    const title = el.dataset.title || '';
+    const desc  = el.dataset.desc  || '';
+    if (modalImg) modalImg.src = src;
+    if (modalTitle) modalTitle.textContent = title;
+    if (modalDesc) modalDesc.textContent = desc;
+    galleryModal?.classList.remove('hidden');
+  });
+});
+if (modalCloseBtn) {
+  modalCloseBtn.addEventListener('click', () => galleryModal?.classList.add('hidden'));
+}
+if (galleryModal) {
+  galleryModal.addEventListener('click', e => {
+    if (e.target === galleryModal) galleryModal.classList.add('hidden');
+  });
+}
+
+// -------------------------------------------------
+// 6. SOUNDBOARD – PLAY PRE‑LOADED SOUNDS
+// -------------------------------------------------
+const soundboardButtons = document.querySelectorAll('.soundboard-btn[data-sound]');
+const soundBuffers = {};
+function loadSound(name, url) {
+  fetch(url)
+    .then(r => r.arrayBuffer())
+    .then(buf => audioCtx.decodeAudioData(buf))
+    .then(decoded => { soundBuffers[name] = decoded; })
+    .catch(console.error);
+}
+// Add placeholder URLs – replace with real .wav files in assets/ if desired
+loadSound('flamethrower', 'assets/flamethrower.wav');
+loadSound('paperhand',    'assets/paperhand.wav');
+loadSound('airhorn',      'assets/airhorn.wav');
+loadSound('solana',       'assets/solana.wav');
+loadSound('chaching',     'assets/chaching.wav');
+loadSound('rocket',       'assets/rocket.wav');
+function playSound(name) {
+  if (!audioCtx || !soundBuffers[name]) return;
+  const source = audioCtx.createBufferSource();
+  source.buffer = soundBuffers[name];
+  source.connect(audioCtx.destination);
+  source.start();
+}
+soundboardButtons.forEach(btn => {
+  const snd = btn.dataset.sound;
+  btn.addEventListener('click', () => {
+    initAudioContext();
+    playSound(snd);
+  });
+});
