@@ -53,7 +53,6 @@ Abra o arquivo `index.html` e edite os seguintes pontos:
 2. **Links das Redes Sociais e Pump.fun**:
    Substitua os links dos botões:
    - `https://pump.fun` ➔ Link da sua moeda na pump.fun.
-   - `https://t.me` ➔ Link do seu grupo no Telegram.
    - `https://x.com` ➔ Link do seu perfil no Twitter/X.
    - `https://dexscreener.com` ➔ Link do DexScreener da moeda após o deploy.
 
