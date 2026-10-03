@@ -1,5 +1,5 @@
 /**
- * $BURN - Memecoin Website Logic & Interactions
+ * $BURN - Memecoin Website Logic & Interactions (English Edition)
  * Includes: Particle Canvas (Fire Embers), Web Audio Fire Synthesizer,
  * CA Copy Toast, Interactive Bonding Curve Calculator, Degen Quote Generator & FAQ Accordion.
  */
@@ -222,11 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateAudioUI(playing) {
     if (playing) {
       if (soundIcon) soundIcon.className = 'fa-solid fa-volume-high text-red-500 animate-pulse';
-      if (soundText) soundText.textContent = 'Fogo Ligado 🔥';
+      if (soundText) soundText.textContent = 'Fire On 🔥';
       if (mobileSoundIcon) mobileSoundIcon.className = 'fa-solid fa-volume-high text-red-500';
     } else {
       if (soundIcon) soundIcon.className = 'fa-solid fa-volume-xmark';
-      if (soundText) soundText.textContent = 'Som 🔥';
+      if (soundText) soundText.textContent = 'Sound 🔥';
       if (mobileSoundIcon) mobileSoundIcon.className = 'fa-solid fa-volume-xmark';
     }
   }
@@ -259,14 +259,14 @@ document.addEventListener('DOMContentLoaded', () => {
         playIgniteFx();
 
         // UI button state feedback
-        copyBtnText.innerText = 'Copiado! 🔥';
+        copyBtnText.innerText = 'Copied! 🔥';
         copyCaBtn.classList.add('bg-emerald-600', 'text-white');
         
         // Show Toast
         toast.classList.add('show');
 
         setTimeout(() => {
-          copyBtnText.innerText = 'Copiar CA';
+          copyBtnText.innerText = 'Copy CA';
           copyCaBtn.classList.remove('bg-emerald-600', 'text-white');
         }, 2200);
 
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
           toast.classList.remove('show');
         }, 3500);
       }).catch(err => {
-        console.error('Falha ao copiar:', err);
+        console.error('Failed to copy CA:', err);
       });
     });
   }
@@ -295,8 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const estimatedBurn = Math.floor(solVal * TOKENS_PER_SOL_RATE);
-    // Format to PT-BR numeric string with dots (e.g. 12.500.000)
-    burnOutput.innerText = estimatedBurn.toLocaleString('pt-BR');
+    // Format to standard English numeric string with commas (e.g. 12,500,000)
+    burnOutput.innerText = estimatedBurn.toLocaleString('en-US');
   }
 
   if (solInput) {
@@ -306,16 +306,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 5. DEGEN HYPE QUOTE GENERATOR
+  // 5. DEGEN HYPE QUOTE GENERATOR (ENGLISH)
   // ==========================================
   const hypeQuotes = [
-    "\"Paper hands viram cinzas. Diamond hands forjam diamantes no fogo da $BURN!\"",
-    "\"Se você não aguenta o calor dos 100x, volte para a poupança! 🔥\"",
-    "\"O urso tentou shortar o fogo e virou churrasco na Pump.fun.\"",
-    "\"Zero taxas, 100% queima. A matemática de quem nasceu pra vencer no Raydium.\"",
-    "\"A lua é fria demais para nós. Nosso destino é o núcleo solar! 🚀☀️\"",
-    "\"Compre na faísca antes que vire um incêndio incontrolável!\"",
-    "\"1 SOL hoje na $BURN ou o arrependimento eterno amanhã na timeline do X.\""
+    "\"Paper hands turn to ashes. Diamond hands forge diamonds in the fire of $BURN!\"",
+    "\"If you can't handle the 100x heat, stay out of the kitchen! 🔥\"",
+    "\"Bears tried to short the flame and got roasted on Pump.fun.\"",
+    "\"Zero taxes, 100% burn. The unstoppable math of winners heading to Raydium.\"",
+    "\"The moon is too cold for us. Our real destination is the solar core! 🚀☀️\"",
+    "\"Buy the spark before it turns into an unstoppable wildfire!\"",
+    "\"1 SOL into $BURN today or eternal FOMO on your X timeline tomorrow.\""
   ];
 
   const hypeQuoteEl = document.getElementById('hypeQuote');
